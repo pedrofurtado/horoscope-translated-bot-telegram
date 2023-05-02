@@ -1,5 +1,5 @@
 {
   "rewrites": [
-    { "source": "/(.*)", "destination": "/bot/webhook" }
+    { "source": "/(.*)", "destination": "/bot/webhook-old" }
   ]
 }

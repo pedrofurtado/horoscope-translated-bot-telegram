@@ -9,3 +9,4 @@ updater.start_webhook(listen="0.0.0.0",
                       url_path=telegram_bot_token(),
                       webhook_url=telegram_bot_url_with_token()
                       )
+updater.idle()

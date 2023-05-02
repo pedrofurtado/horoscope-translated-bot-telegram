@@ -2,14 +2,11 @@ import re
 from flask import Flask, request
 import telegram
 import os
+import asyncio
+from utils import telegram_bot_url, telegram_bot_token, create_handlers
 
 global bot
-global HOROSCOPE_TRANSLATED_BOT_TELEGRAM_TOKEN
-global URL
-
-URL = os.getenv('TELEGRAM_BOT_URL')
-HOROSCOPE_TRANSLATED_BOT_TELEGRAM_TOKEN = os.getenv('TELEGRAM_BOT_TOKEN')
-bot = telegram.Bot(token=HOROSCOPE_TRANSLATED_BOT_TELEGRAM_TOKEN)
+bot = telegram.Bot(token=telegram_bot_token())
 
 app = Flask(__name__)
 
@@ -23,23 +20,36 @@ def get_me():
 
 @app.route('/setup_webhook', methods=['GET', 'POST'])
 def setup_webhook():
-    s = bot.setWebhook('{URL}/{HOOK}'.format(URL=URL, HOOK=HOROSCOPE_TRANSLATED_BOT_TELEGRAM_TOKEN))
+    s = bot.setWebhook('{URL}/{HOOK}'.format(URL=telegram_bot_url(), HOOK=telegram_bot_token()))
 
     if s:
         return "Webhook setup ok"
     else:
         return "Webhook setup failed"
 
-@app.route('/{}'.format(HOROSCOPE_TRANSLATED_BOT_TELEGRAM_TOKEN), methods=['POST'])
-def respond():
-    update = telegram.Update.de_json(request.get_json(force=True), bot)
+async def bot_tele(text):
+    application = (
+        Application.builder().token(telegram_bot_token()).build()
+    )
 
-    chat_id = update.message.chat.id
-    message_id = update.message.message_id
+    create_handlers(application)
 
-    text = update.message.text.encode('utf-8').decode()
+    await application.update_queue.put(Update.de_json(data=text, bot=application.bot))
+    async with application:
+        await application.start()
+        await application.stop()
 
-    print('Telegram message received: Text [{message_text}] | Chat ID {chat_id} | Message ID {message_id} | Telegram object {telegram_object}'.format(message_text=text, chat_id=chat_id, message_id=message_id, telegram_object=repr(update)))
+@app.route('/{}'.format(telegram_bot_token()), methods=['POST'])
+def webhook():
+    #update = telegram.Update.de_json(request.get_json(force=True), bot)
+    #create_handlers(update.dispatcher)
+
+    print("run with asyuncio")
+    asyncio.run(bot_tele(request.get_json(force=True)))
+
+    print("completed with asyuncio")
+
+    return 'ok'
 
     if text == "/start":
         bot_welcome = """

@@ -69,18 +69,20 @@ def error(update, context):
     """Log Errors caused by Updates."""
     print('Update "%s" caused error "%s"', update, context.error)
 
+def create_handlers(dispatcher):
+  dispatcher.add_handler(telegram.ext.CommandHandler('start',start))
+  dispatcher.add_handler(telegram.ext.CommandHandler('help',help))
+  dispatcher.add_handler(telegram.ext.CommandHandler('content',content))
+  dispatcher.add_handler(telegram.ext.CommandHandler('Python',Python))
+  dispatcher.add_handler(telegram.ext.CommandHandler('SQL',SQL))
+  dispatcher.add_handler(telegram.ext.CommandHandler('Java',Java))
+  dispatcher.add_handler(telegram.ext.CommandHandler('Skillup',Skillup))
+  dispatcher.add_handler(telegram.ext.CommandHandler('contact',contact))
+  dispatcher.add_handler(telegram.ext.MessageHandler(telegram.ext.Filters.text, handle_message))
+  dispatcher.add_error_handler(error)
+
 def create_updater():
   updater = telegram.ext.Updater(telegram_bot_token(), use_context=True)
   disp = updater.dispatcher
-
-  disp.add_handler(telegram.ext.CommandHandler('start',start))
-  disp.add_handler(telegram.ext.CommandHandler('help',help))
-  disp.add_handler(telegram.ext.CommandHandler('content',content))
-  disp.add_handler(telegram.ext.CommandHandler('Python',Python))
-  disp.add_handler(telegram.ext.CommandHandler('SQL',SQL))
-  disp.add_handler(telegram.ext.CommandHandler('Java',Java))
-  disp.add_handler(telegram.ext.CommandHandler('Skillup',Skillup))
-  disp.add_handler(telegram.ext.CommandHandler('contact',contact))
-  disp.add_handler(telegram.ext.MessageHandler(telegram.ext.Filters.text, handle_message))
-  disp.add_error_handler(error)
+  create_handlers(disp)
   return updater
