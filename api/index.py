@@ -35,7 +35,7 @@ def respond():
 
     text = telegram_message.message.text.encode('utf-8').decode()
 
-    print('Telegram message received: Text [{message_text}] | Chat ID {chat_id} | Message ID {message_id} | Telegram object {telegram_object}'.format(message_text=text, chat_id=chat_id, message_id=message_id, telegram_object=repr(telegram_message))
+    print('Telegram message received: Text [{message_text}] | Chat ID {chat_id} | Message ID {message_id} | Telegram object {telegram_object}'.format(message_text=text, chat_id=chat_id, message_id=message_id, telegram_object=repr(telegram_message)))
 
     if text == "/start":
         bot_welcome = """
