@@ -11,7 +11,7 @@ docker container run --rm -it --name horoscope-translated-bot-telegram -w /srv -
   > python -m venv venv/
   > source venv/bin/activate
   > pip install -r requirements.txt
-  > flask --app api/index run --port 3000 --host 0.0.0.0
+  > TELEGRAM_BOT_URL=https://horoscope-translated-bot-telegram.vercel.app TELEGRAM_BOT_TOKEN=bot-token flask --app api/index run --port 3000 --host 0.0.0.0 --debug
 ```
 
 Your Flask application is now available at `http://localhost:3000`.
