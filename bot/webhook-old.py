@@ -4,12 +4,12 @@ import telegram
 import os
 
 global bot
-global TOKEN
+global HOROSCOPE_TRANSLATED_BOT_TELEGRAM_TOKEN
 global URL
 
 URL = os.getenv('TELEGRAM_BOT_URL')
-TOKEN = os.getenv('TELEGRAM_BOT_TOKEN')
-bot = telegram.Bot(token=TOKEN)
+HOROSCOPE_TRANSLATED_BOT_TELEGRAM_TOKEN = os.getenv('TELEGRAM_BOT_TOKEN')
+bot = telegram.Bot(token=HOROSCOPE_TRANSLATED_BOT_TELEGRAM_TOKEN)
 
 app = Flask(__name__)
 
@@ -17,25 +17,29 @@ app = Flask(__name__)
 def home():
     return 'Horoscope Translated Bot Telegram - See more details in https://github.com/pedrofurtado/horoscope-translated-bot-telegram'
 
+@app.route('/get_me')
+def get_me():
+    return str(bot.get_me())
+
 @app.route('/setup_webhook', methods=['GET', 'POST'])
-def set_webhook():
-    s = bot.setWebhook('{URL}/{HOOK}'.format(URL=URL, HOOK=TOKEN))
+def setup_webhook():
+    s = bot.setWebhook('{URL}/{HOOK}'.format(URL=URL, HOOK=HOROSCOPE_TRANSLATED_BOT_TELEGRAM_TOKEN))
 
     if s:
         return "Webhook setup ok"
     else:
         return "Webhook setup failed"
 
-@app.route('/{}'.format(TOKEN), methods=['POST'])
+@app.route('/{}'.format(HOROSCOPE_TRANSLATED_BOT_TELEGRAM_TOKEN), methods=['POST'])
 def respond():
-    telegram_message = telegram.Update.de_json(request.get_json(force=True), bot)
+    update = telegram.Update.de_json(request.get_json(force=True), bot)
 
-    chat_id = telegram_message.message.chat.id
-    message_id = telegram_message.message.message_id
+    chat_id = update.message.chat.id
+    message_id = update.message.message_id
 
-    text = telegram_message.message.text.encode('utf-8').decode()
+    text = update.message.text.encode('utf-8').decode()
 
-    print('Telegram message received: Text [{message_text}] | Chat ID {chat_id} | Message ID {message_id} | Telegram object {telegram_object}'.format(message_text=text, chat_id=chat_id, message_id=message_id, telegram_object=repr(telegram_message)))
+    print('Telegram message received: Text [{message_text}] | Chat ID {chat_id} | Message ID {message_id} | Telegram object {telegram_object}'.format(message_text=text, chat_id=chat_id, message_id=message_id, telegram_object=repr(update)))
 
     if text == "/start":
         bot_welcome = """
