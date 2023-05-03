@@ -1,6 +1,6 @@
 from flask import Flask, request
 import telegram
-import telegram.ext
+#import telegram.ext
 import os
 
 import requests
@@ -123,7 +123,7 @@ def respond():
     text = update.message.text.encode('utf-8').decode()
     print("got text message :", text)
 
-    updater = telegram.ext.Updater(telegram_bot_token(), use_context=True)
+    #updater = telegram.ext.Updater(telegram_bot_token(), use_context=True)
     # disp = updater.dispatcher
     # create_handlers(disp)
 
