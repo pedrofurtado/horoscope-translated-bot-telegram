@@ -2,7 +2,7 @@ from flask import Flask, request
 import telegram
 import os
 
-# import telegram.ext
+import telegram.ext
 import requests
 
 def telegram_bot_url():
@@ -98,7 +98,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def home():
-    return 'Horoscope Translated Bot Telegram - See more details in https://github.com/pedrofurtado/horoscope-translated-bot-telegram'
+    return 'Horoscope1 Translated Bot Telegram - See more details in https://github.com/pedrofurtado/horoscope-translated-bot-telegram'
 
 @app.route('/get_me')
 def get_me():
