@@ -122,10 +122,14 @@ def respond():
     text = update.message.text.encode('utf-8').decode()
     print("got text message :", text)
 
+    updater = telegram.ext.Updater(telegram_bot_token(), use_context=True)
+    disp = updater.dispatcher
+    create_handlers(disp)
+
     if text == "/start":
         # print the welcoming message
         bot_welcome = """
-        Welcome to coolAvatar bot, the bot is using the service from http://avatars.adorable.io/ to generate cool looking avatars based on the name you enter so please enter a name and the bot will reply with an avatar for your name.
+        Welcome22 to coolAvatar bot, the bot is using the service from http://avatars.adorable.io/ to generate cool looking avatars based on the name you enter so please enter a name and the bot will reply with an avatar for your name.
         """
         bot.sendMessage(chat_id=chat_id, text=bot_welcome, reply_to_message_id=msg_id)
     else:
