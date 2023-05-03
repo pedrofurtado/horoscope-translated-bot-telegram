@@ -1,10 +1,7 @@
-import re
 from flask import Flask, request
 import telegram
 import os
-import asyncio
-import json
-from utils import telegram_bot_url, telegram_bot_token, create_handlers, create_updater
+from utils import telegram_bot_url, telegram_bot_token, create_updater
 
 global bot
 bot = telegram.Bot(token=telegram_bot_token())
