@@ -12,8 +12,8 @@ import os
 # def telegram_bot_url_with_token():
 #   return telegram_bot_url() + "/" + telegram_bot_token()
 
-# def telegram_bot_token():
-#   return os.getenv('TELEGRAM_BOT_TOKEN')
+def telegram_bot_token():
+  return os.getenv('TELEGRAM_BOT_TOKEN')
 
 # def get_daily_horoscope(sign, day):
 #     """Get daily horoscope for a zodiac sign.
