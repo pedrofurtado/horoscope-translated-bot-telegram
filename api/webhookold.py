@@ -1,10 +1,10 @@
 from flask import Flask, request
 import telegram
 import os
-from utils import telegram_bot_url, telegram_bot_token, create_updater
+from utils import funcs
 
 global bot
-bot = telegram.Bot(token=telegram_bot_token())
+bot = telegram.Bot(token=funcs.telegram_bot_token())
 
 app = Flask(__name__)
 
@@ -18,18 +18,18 @@ def get_me():
 
 @app.route('/setup_webhook', methods=['GET', 'POST'])
 def setup_webhook():
-    s = bot.setWebhook('{URL}/{HOOK}'.format(URL=telegram_bot_url(), HOOK=telegram_bot_token()))
+    s = bot.setWebhook('{URL}/{HOOK}'.format(URL=funcs.telegram_bot_url(), HOOK=funcs.telegram_bot_token()))
 
     if s:
         return "Webhook setup ok"
     else:
         return "Webhook setup failed"
 
-# @app.route('/{}'.format(telegram_bot_token()), methods=['POST'])
+# @app.route('/{}'.format(funcs.telegram_bot_token()), methods=['POST'])
 # def webhook():
 #     # https://github.com/python-telegram-bot/v13.x-wiki/wiki/Webhooks
 #     # https://github.com/aarzaary/telegram-bot-vercel-python/blob/48f1905bbfc0af25e11c376b817e9e91ba7e0174/example/bot.py#L15
-#     updater = create_updater()
+#     updater = funcs.create_updater()
 #     update = telegram.Update.de_json(request.get_json(force=True), bot)
 #     updater.dispatcher.process_update(update)
 #     return 'ok'
