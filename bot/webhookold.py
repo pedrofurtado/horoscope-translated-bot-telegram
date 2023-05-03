@@ -3,7 +3,8 @@ from flask import Flask, request
 import telegram
 import os
 import asyncio
-from utils import telegram_bot_url, telegram_bot_token, create_handlers
+import json
+from utils import telegram_bot_url, telegram_bot_token, create_handlers, create_updater
 
 global bot
 bot = telegram.Bot(token=telegram_bot_token())
@@ -27,41 +28,11 @@ def setup_webhook():
     else:
         return "Webhook setup failed"
 
-async def bot_tele(text):
-    application = (
-        Application.builder().token(telegram_bot_token()).build()
-    )
-
-    create_handlers(application)
-
-    await application.update_queue.put(Update.de_json(data=text, bot=application.bot))
-    async with application:
-        await application.start()
-        await application.stop()
-
 @app.route('/{}'.format(telegram_bot_token()), methods=['POST'])
 def webhook():
-    #update = telegram.Update.de_json(request.get_json(force=True), bot)
-    #create_handlers(update.dispatcher)
-
-    print("run with asyuncio")
-    asyncio.run(bot_tele(request.get_json(force=True)))
-
-    print("completed with asyuncio")
-
-    return 'ok'
-
-    if text == "/start":
-        bot_welcome = """
-        Welcome to HoroscopeTranslatedBot!
-        """
-
-        bot.sendMessage(chat_id=chat_id, text=bot_welcome, reply_to_message_id=message_id)
-    else:
-        try:
-            photo_url = "https://picsum.photos/200/300"
-            bot.sendPhoto(chat_id=chat_id, photo=photo_url, reply_to_message_id=message_id)
-        except Exception:
-            bot.sendMessage(chat_id=chat_id, text="There was a problem!", reply_to_message_id=message_id)
-
+    # https://github.com/python-telegram-bot/v13.x-wiki/wiki/Webhooks
+    # https://github.com/aarzaary/telegram-bot-vercel-python/blob/48f1905bbfc0af25e11c376b817e9e91ba7e0174/example/bot.py#L15
+    updater = create_updater()
+    update = telegram.Update.de_json(request.get_json(force=True), bot)
+    updater.dispatcher.process_update(update)
     return 'ok'
